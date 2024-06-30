@@ -26,8 +26,14 @@
 - [logout_form.php](pages/logout_form.php): ログアウトフォーム
 - [logout.php](pages/logout.php): ログアウト処理
 
-## SQLite3 for PHP
+## SQLite 関係
 
-[https://rice8y.github.io/sqlite3/](https://rice8y.github.io/sqlite3/)
+- [SQLite3 for PHP](https://rice8y.github.io/sqlite3/)
+- [SQlite 公式ドキュメント](https://www.sqlite.org/docs.html)
+- [PHP SQLite3 公式マニュアル](https://www.php.net/manual/ja/class.sqlite3.php)
 
-## Boostrap
+## Boostrap 関係
+
+- [とほほのBootstrap 5入門](https://www.tohoho-web.com/bootstrap5/index.html)
+- [Boostrap 公式ドキュメント](https://getbootstrap.jp/docs/5.3/getting-started/introduction/)
+  
