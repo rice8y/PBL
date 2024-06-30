@@ -1,55 +1,28 @@
-<?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
-    exit;
-}
-?>
-<!DOCTYPE html>
+<?php  session_start() ?>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>logout form</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">健康管理アプリ</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="home.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="set_goals.php">目標設定</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.php">基本情報</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"  href="checklist.php">チェックリスト</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="logout_form.php">ログアウト</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> -->
-                </ul>
+    <section class="vh-100" style="background-color: white;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <h3 class="mb-5">ログアウト</h3>
+                            <form action="login.php" method="POST" id="logout-form" novalidate>
+                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit" name="login">ログアウト</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-    <!-- contents -->
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
-
 </html>
