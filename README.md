@@ -6,9 +6,9 @@
 
 ## 環境
 
-**FE:** HTML, CSS, JavaScript
-**FW:** Boostrap
-**BE:** PHP
+**FE:** HTML, CSS, JavaScript  
+**FW:** Boostrap  
+**BE:** PHP  
 **DB:** SQLite3
 
 ## ファイル
