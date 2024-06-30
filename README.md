@@ -26,7 +26,7 @@
 - [logout_form.php](pages/logout_form.php): ログアウトフォーム
 - [logout.php](pages/logout.php): ログアウト処理
 
-## SQLite for PHP
+## SQLite3 for PHP
 
 [https://rice8y.github.io/sqlite3/](https://rice8y.github.io/sqlite3/)
 
