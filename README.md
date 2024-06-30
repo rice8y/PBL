@@ -29,7 +29,7 @@
 ## SQLite 関係
 
 - [SQLite3 for PHP](https://rice8y.github.io/sqlite3/)
-- [SQlite 公式ドキュメント](https://www.sqlite.org/docs.html)
+- [SQLite 公式ドキュメント](https://www.sqlite.org/docs.html)
 - [PHP SQLite3 公式マニュアル](https://www.php.net/manual/ja/class.sqlite3.php)
 
 ## Boostrap 関係
