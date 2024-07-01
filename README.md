@@ -22,7 +22,9 @@
 - [register_form.php](pages/register_form.php): 新規登録フォーム
 - [register.php](pages/register.php): 新規登録処理
 - [home.php](pages/home.php): ホーム
-- [set_goals.php](pages/set_goals.php): 目標設定
+- [set_data.php](pages/set_data.php): プロットデータ追加処理
+- [set_goals_form.php](pages/set_goals_form.php): 目標設定
+- [set_goals.php](pages/set_goals.php): 目標値追加処理
 - [profile.php](pages/profile.php): 基本情報
 - [checklist.php](pages/checklist.php): チェックリスト
 - [logout_form.php](pages/logout_form.php): ログアウトフォーム
