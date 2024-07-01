@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         $create_user_table_query = "CREATE TABLE IF NOT EXISTS $user_table (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             steps INTEGER,
-            time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+            time DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
         )";
         $sqlite->exec($create_user_table_query);
 
