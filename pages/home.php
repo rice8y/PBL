@@ -4,6 +4,22 @@ if (!isset($_SESSION['username'])) {
     header('Location: login.php');
     exit;
 }
+
+// $db_file = "sqlite3.db";
+// $username = $_SESSION['username'];
+
+// try{
+//     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
+//     $sqlite->enableExceptions(true);
+
+//     $user_table = "user_" . SQLite3::escapeString($username);
+//     $stmt = $sqlite->prepare("SELECT password FROM " . $user_table . " WHERE username = :username");
+//     $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+//     $result = $stmt->execute();
+
+// } catch (Exception $e) {
+//     echo "Caught exception: " . $e->getMessage();
+// }
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -12,7 +28,8 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 
 <body>
@@ -47,8 +64,30 @@ if (!isset($_SESSION['username'])) {
             </div>
         </div>
     </nav>
+    <div class="container text-center">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <div id="plot"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const myDiv =document.getElementById('plot');
+        var data = [
+            {
+                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+                y: [1, 3, 6],
+                type: 'scatter'
+            }
+        ];
+
+        Plotly.newPlot(myDiv, data);
+
+    </script>
     <!-- contents -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -14,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         $user_table = "user_" . SQLite3::escapeString($username);
         $create_user_table_query = "CREATE TABLE IF NOT EXISTS $user_table (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            data TEXT
+            steps INTEGER,
+            time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
         )";
         $sqlite->exec($create_user_table_query);
 
