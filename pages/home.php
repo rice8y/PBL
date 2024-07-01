@@ -5,21 +5,27 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// $db_file = "sqlite3.db";
-// $username = $_SESSION['username'];
+$db_file = "sqlite3.db";
+$username = $_SESSION['username'];
 
-// try{
-//     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
-//     $sqlite->enableExceptions(true);
+try {
+    $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
+    $sqlite->enableExceptions(true);
 
-//     $user_table = "user_" . SQLite3::escapeString($username);
-//     $stmt = $sqlite->prepare("SELECT password FROM " . $user_table . " WHERE username = :username");
-//     $stmt->bindValue(':username', $username, SQLITE3_TEXT);
-//     $result = $stmt->execute();
+    $user_table = "user_" . SQLite3::escapeString($username);
+    $stmt = $sqlite->prepare("SELECT steps, time FROM $user_table ORDER BY time DESC LIMIT 7");
+    $result = $stmt->execute();
 
-// } catch (Exception $e) {
-//     echo "Caught exception: " . $e->getMessage();
-// }
+    $steps_data = [];
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $steps_data[] = $row;
+    }
+
+    $steps_data = array_reverse($steps_data);
+
+} catch (Exception $e) {
+    echo "Caught exception: " . $e->getMessage();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -30,6 +36,7 @@ if (!isset($_SESSION['username'])) {
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -68,22 +75,39 @@ if (!isset($_SESSION['username'])) {
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
                 <div id="plot"></div>
+                <div>
+                    <form action="set_steps.php" method="POST" id="steps-form" novalidate>
+                        <div class="form-outline mb-4 text-start">
+                            <label class="form-label" for="steps">歩数</label>
+                            <input type="number" name="steps" id="steps" class="form-control form-control-lg"
+                                required />
+                            <div class="invalid-feedback">歩数を入力して下さい</div>
+                        </div>
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+                            type="submit" name="set">更新</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <!-- <script>
-        const myDiv =document.getElementById('plot');
+    <script>
+        const myDiv = document.getElementById('plot');
+        var stepsData = <?php echo json_encode($steps_data); ?>;
+
+        var xData = stepsData.map(item => item.time);
+        var yData = stepsData.map(item => item.steps);
+
         var data = [
             {
-                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-                y: [1, 3, 6],
+                x: xData,
+                y: yData,
                 type: 'scatter'
             }
         ];
 
         Plotly.newPlot(myDiv, data);
 
-    </script> -->
+    </script>
     <!-- contents -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
