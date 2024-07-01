@@ -85,7 +85,7 @@ try {
                 <div>
                     <div id="pie-chart" class="content">
                         <div class="pie-chart-wrap">
-                            <div class="box blue" data-percent="88">    <!-- 要修正 -->
+                            <div class="box blue" data-percent="88">
                                 <h3>睡眠時間</h3>
                                 <div class="percent">
                                     <svg>
@@ -97,7 +97,7 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            <div class="box red" data-percent="65">    <!-- 要修正 -->
+                            <div class="box red" data-percent="65">
                                 <h3>歩数</h3>
                                 <div class="percent">
                                     <svg>
@@ -137,18 +137,29 @@ try {
         var stepsData = <?php echo json_encode($steps_data); ?>;
         var sleepData = <?php echo json_encode($sleep_data); ?>;
 
-        var xData = stepsData.map(item => item.time);
+        var xData = stepsData.map(item => new Date(item.time));
         var yData = stepsData.map(item => item.steps);
+
+        var formattedXData = xData.map(date => {
+            const options = { month: 'short', day: 'numeric', weekday: 'short' };
+            return date.toLocaleDateString('ja-JP', options);
+        });
 
         var data = [
             {
-                x: xData,
+                x: formattedXData,
                 y: yData,
                 type: 'scatter'
             }
         ];
 
-        Plotly.newPlot(myDiv, data);
+        var layout = {
+            yaxis: {
+                rangemode: 'tozero'
+            }
+        };
+
+        Plotly.newPlot(myDiv, data, layout);
 
         document.addEventListener('DOMContentLoaded', function () {
             const boxes = document.querySelectorAll('.box');
