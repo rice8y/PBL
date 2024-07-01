@@ -23,6 +23,16 @@ try {
 
     $steps_data = array_reverse($steps_data);
 
+    $stmt = $sqlite->prepare("SELECT sleep FROM $user_table ORDER BY time DESC LIMIT 1");
+    $result = $stmt->execute();
+
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $sleep_data = [];
+    $sleep_data[] = $row;
+    // $sl = explode(":", $);
+    // $hh = $sl[0];
+    // $mm = $sl[1];
+
 } catch (Exception $e) {
     echo "Caught exception: " . $e->getMessage();
 }
@@ -37,6 +47,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="circle.css">
 </head>
 
 <body>
@@ -77,6 +88,50 @@ try {
             <div class="col-md-auto">
                 <!-- <div id="plot"></div> -->
                 <div>
+                    <div id="pie-chart" class="content">
+                        <div class="pie-chart-wrap">
+                            <div class="box blue" data-percent="88">
+                                <h3>睡眠時間</h3>
+                                <div class="percent">
+                                    <svg>
+                                        <circle class="base" cx="75" cy="75" r="70"></circle>
+                                        <circle class="line" cx="75" cy="75" r="70"></circle>
+                                    </svg>
+                                    <div class="number">
+                                        <h3 class="title"><span class="value">0</span><span>h</span></h3>
+                                    </div>
+                                </div>
+                                <!-- <div class="input-field">
+                                    <label>Target: <input type="number" min="0" value="8" class="target-value">
+                                        h</label>
+                                    <label>Current: <input type="number" min="0" value="7" class="input-value">
+                                        h</label>
+                                    <button class="update-btn">更新</button>
+                                </div> -->
+                            </div>
+                            <div class="box red" data-percent="65">
+                                <h3>歩数</h3>
+                                <div class="percent">
+                                    <svg>
+                                        <circle class="base" cx="75" cy="75" r="70"></circle>
+                                        <circle class="line" cx="75" cy="75" r="70"></circle>
+                                    </svg>
+                                    <div class="number">
+                                        <h3 class="title"><span class="value">0</span><span>steps</span></h3>
+                                    </div>
+                                </div>
+                                <!-- <div class="input-field">
+                                    <label>Target: <input type="number" min="0" value="3000" class="target-value">
+                                        steps</label>
+                                    <label>Current: <input type="number" min="0" value="2000" class="input-value">
+                                        steps</label>
+                                    <button class="update-btn">更新</button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
                     <form action="set_steps.php" method="POST" id="steps-form" novalidate>
                         <div class="form-outline mb-4 text-start">
                             <label class="form-label" for="steps">歩数</label>
@@ -86,8 +141,7 @@ try {
                         </div>
                         <div class="form-outline mb-4 text-start">
                             <label class="form-label" for="sleep">睡眠時間</label>
-                            <input type="time" name="sleep" id="sleep" class="form-control form-control-lg"
-                                required />
+                            <input type="time" name="sleep" id="sleep" class="form-control form-control-lg" required />
                             <div class="invalid-feedback">睡眠時間を入力して下さい</div>
                         </div>
                         <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
@@ -114,6 +168,40 @@ try {
 
         Plotly.newPlot(myDiv, data);
 
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const boxes = document.querySelectorAll('.box');
+
+            boxes.forEach(box => {
+                const targetInput = <?php  ?>
+                const input = box.querySelector('.input-value');
+                const button = box.querySelector('.set');
+
+                button.addEventListener('click', () => {
+                    const targetHours = parseFloat(targetInput.value);
+                    const currentHours = parseFloat(input.value);
+                    const percent = (currentHours / targetHours) * 100;
+                    updateCircle(box, percent);
+                    box.querySelector('.value').textContent = currentHours;
+                });
+
+                // 初期値で円グラフを更新
+                const initialTargetHours = parseFloat(targetInput.value);
+                const initialCurrentHours = parseFloat(input.value);
+                const initialPercent = (initialCurrentHours / initialTargetHours) * 100;
+                updateCircle(box, initialPercent);
+                box.querySelector('.value').textContent = initialCurrentHours;
+            });
+
+            function updateCircle(box, percent) {
+                const circle = box.querySelector('.line');
+                const radius = circle.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (percent / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+            }
+        });
     </script>
     <!-- contents -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
