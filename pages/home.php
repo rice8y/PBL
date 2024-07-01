@@ -111,6 +111,9 @@ try {
                         <a class="nav-link" href="checklist.php">チェックリスト</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="mail_form.php">お問い合わせ</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="logout_form.php">ログアウト</a>
                     </li>
                 </ul>

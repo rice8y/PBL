@@ -37,7 +37,7 @@ try {
         $json_sleep = json_decode($json_sleep, true);
         $target_sleep = $json_sleep[0]['target_sleep'];
     }else{
-        $target_sleep = "99:99";
+        $target_sleep = "24:00";
     }
 
     $stmt = $sqlite->prepare("SELECT target_score FROM $user_table ORDER BY time DESC LIMIT 1");
@@ -93,6 +93,9 @@ try {
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="checklist.php">チェックリスト</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mail_form.php">お問い合わせ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout_form.php">ログアウト</a>

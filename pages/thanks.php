@@ -11,8 +11,9 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>checklist</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>mail form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 
 <body>
@@ -35,23 +36,29 @@ if (!isset($_SESSION['username'])) {
                         <a class="nav-link" href="profile.php">基本情報</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="checklist.php">チェックリスト</a>
+                        <a class="nav-link" href="checklist.php">チェックリスト</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="mail_form.php">お問い合わせ</a>
+                        <a class="nav-link active" aria-current="page" href="mail_form.php">お問い合わせ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout_form.php">ログアウト</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
         </div>
     </nav>
-    <!-- contents -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <div class="container">
+        <br>
+        <h2 class="text-left">お問い合わせフォーム</h2><br>
+        お問い合わせありがとうございます。<br><br>
+    </div>
+    <div class="container text-center">
+        <button class="btn btn-primary btn-lg btn-block" type="button" onclick="location.href='mail_form.php'">お問い合わせフォームに戻る</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
