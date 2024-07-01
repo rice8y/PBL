@@ -32,6 +32,45 @@ try {
         $sleep_data[] = $row;
     }
 
+    $stmt = $sqlite->prepare("SELECT target_steps FROM $user_table ORDER BY time DESC LIMIT 1");
+    $result = $stmt->execute();
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $tsteps_data = [];
+    if ($row) {
+        $tsteps_data[] = $row;
+        $json_steps = json_encode($tsteps_data);
+        $json_steps = json_decode($json_steps, true);
+        $target_steps = $json_steps[0]['target_steps'];
+    } else {
+        $target_steps = 9999;
+    }
+
+    $stmt = $sqlite->prepare("SELECT target_sleep FROM $user_table ORDER BY time DESC LIMIT 1");
+    $result = $stmt->execute();
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $tsleep_data = [];
+    if ($row) {
+        $tsleep_data[] = $row;
+        $json_sleep = json_encode($tsleep_data);
+        $json_sleep = json_decode($json_sleep, true);
+        $target_sleep = $json_sleep[0]['target_sleep'];
+    } else {
+        $target_sleep = "24.00";
+    }
+
+    $stmt = $sqlite->prepare("SELECT target_score FROM $user_table ORDER BY time DESC LIMIT 1");
+    $result = $stmt->execute();
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $tscore_data = [];
+    if ($row) {
+        $tscore_data[] = $row;
+        $json_score = json_encode($tscore_data);
+        $json_score = json_decode($json_score, true);
+        $target_score = $json_score[0]['target_score'];
+    } else {
+        $target_score = 100;
+    }
+
 } catch (Exception $e) {
     echo "Caught exception: " . $e->getMessage();
 }
@@ -63,7 +102,7 @@ try {
                         <a class="nav-link active" aria-current="page" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="set_goals.php">目標設定</a>
+                        <a class="nav-link" href="set_goals_form.php">目標設定</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="profile.php">基本情報</a>
@@ -82,7 +121,7 @@ try {
         <div class="row justify-content-md-center">
             <div>
                 <br>
-                <form action="set_steps.php" method="POST" id="steps-form" novalidate>
+                <form action="set_data.php" method="POST" id="steps-form" novalidate>
                     <div class="form-outline mb-4 text-start">
                         <label class="form-label" for="steps">歩数</label>
                         <input type="number" name="steps" id="steps" class="form-control form-control-lg" required />
@@ -102,7 +141,7 @@ try {
             <div class="col-sm-3">
                 <div id="pie-chart" class="content">
                     <div class="pie-chart-wrap">
-                        <div class="box blue" data-percent="88">
+                        <div class="box blue" data-percent="0">
                             <h3>睡眠時間</h3>
                             <div class="percent">
                                 <svg>
@@ -114,7 +153,7 @@ try {
                                 </div>
                             </div>
                         </div>
-                        <div class="box red" data-percent="65">
+                        <div class="box red" data-percent="0">
                             <h3>歩数</h3>
                             <div class="percent">
                                 <svg>
@@ -168,20 +207,21 @@ try {
         document.addEventListener('DOMContentLoaded', function () {
             const boxes = document.querySelectorAll('.box');
 
+
+            function updateCircle(box, percent) {
+                const circle = box.querySelector('.line');
+                const radius = circle.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (percent / 100 * circumference);
+                circle.style.strokeDashoffset = offset;
+            }
+
             boxes.forEach(box => {
                 const valueSpan = box.querySelector('.value');
                 const dataPercent = box.getAttribute('data-percent');
                 valueSpan.textContent = dataPercent;
 
                 updateCircle(box, dataPercent);
-
-                function updateCircle(box, percent) {
-                    const circle = box.querySelector('.line');
-                    const radius = circle.r.baseVal.value;
-                    const circumference = 2 * Math.PI * radius;
-                    const offset = circumference - (percent / 100 * circumference);
-                    circle.style.strokeDashoffset = offset;
-                }
             });
 
             if (sleepData.length > 0) {
@@ -190,12 +230,21 @@ try {
                 const total = hours + minutes / 60;
                 const sleepBox = document.querySelector('.box.blue .value');
                 sleepBox.textContent = total.toFixed(2);
+
+                const sleepPercent = (total / parseFloat("<?php echo $target_sleep; ?>")) * 100;
+                document.querySelector('.box.blue').setAttribute('data-percent', sleepPercent.toFixed(2));
+                updateCircle(document.querySelector('.box.blue'), sleepPercent.toFixed(2));
+                console.log(sleepPercent);
             }
 
             if (stepsData.length > 0) {
                 const latestSteps = stepsData[stepsData.length - 1].steps;
                 const stepsBox = document.querySelector('.box.red .value');
                 stepsBox.textContent = latestSteps;
+
+                const stepsPercent = (latestSteps / parseInt("<?php echo $target_steps; ?>")) * 100;
+                document.querySelector('.box.red').setAttribute('data-percent', stepsPercent.toFixed(2));
+                updateCircle(document.querySelector('.box.red'), stepsPercent.toFixed(2));
             }
         });
     </script>

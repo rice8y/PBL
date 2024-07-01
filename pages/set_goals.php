@@ -1,54 +1,44 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: login_form.php');
-    exit;
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['set'])) {
+    $db_file = "sqlite3.db";
+    $username = $_SESSION['username'];
+    $steps = $_POST['steps'];
+    $sleep = $_POST['sleep'];
+    $score = $_POST['score'];
+
+    try {
+        $sqlite = new SQLite3($db_file);
+        $sqlite->enableExceptions(true);
+
+        $user_table = "user_" . SQLite3::escapeString($username);
+
+        $current_date = date('Y-m-d');
+
+        $stmt = $sqlite->prepare("SELECT COUNT(*) as count FROM $user_table WHERE date(time) = :current_date");
+        $stmt->bindValue(':current_date', $current_date, SQLITE3_TEXT);
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+
+        if ($row['count'] > 0) {
+            $stmt = $sqlite->prepare("UPDATE $user_table SET target_steps = :target_steps, target_sleep = :target_sleep, target_score = :target_score WHERE date(time) = :current_date");
+            $stmt->bindValue(':target_steps', $steps, SQLITE3_INTEGER);
+            $stmt->bindValue(':target_sleep', $sleep, SQLITE3_TEXT);
+            $stmt->bindValue(':target_score', $score, SQLITE3_INTEGER);
+            $stmt->bindValue(':current_date', $current_date, SQLITE3_TEXT);
+            $stmt->execute();
+        } else {
+            $stmt = $sqlite->prepare("INSERT INTO $user_table (target_steps, target_sleep, target_score) VALUES (:target_steps, :target_sleep, :target_score)");
+            $stmt->bindValue(':target_steps', $steps, SQLITE3_INTEGER);
+            $stmt->bindValue(':target_sleep', $sleep, SQLITE3_TEXT);
+            $stmt->bindValue(':target_score', $score, SQLITE3_INTEGER);
+            $stmt->execute();
+        }
+
+        header('Location: set_goals_form.php');
+
+    } catch (Exception $e) {
+        echo "Caught exception: " . $e->getMessage();
+    }
 }
 ?>
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>set goals</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">健康管理アプリ</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="home.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active"aria-current="page" href="set_goals.php">目標設定</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.php">基本情報</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="checklist.php">チェックリスト</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout_form.php">ログアウト</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> -->
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- contents -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-</body>
-
-</html>

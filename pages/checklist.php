@@ -29,7 +29,7 @@ if (!isset($_SESSION['username'])) {
                         <a class="nav-link" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="set_goals.php">目標設定</a>
+                        <a class="nav-link" href="set_goals_form.php">目標設定</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="profile.php">基本情報</a>

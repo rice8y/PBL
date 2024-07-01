@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             steps INTEGER,
             sleep TEXT,
+            target_steps INTEGER,
+            target_sleep TEXT,
+            target_score INTEGER,
             time DATETIME NOT NULL UNIQUE DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
         )";
         $sqlite->exec($create_user_table_query);
