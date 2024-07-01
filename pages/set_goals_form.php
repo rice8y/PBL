@@ -105,7 +105,7 @@ try {
         <div class="row justify-content-md-center">
             <div>
                 <br>
-                <form action="set_goals.php" method="POST" id="steps-form" novalidate>
+                <form action="set_goals.php" method="POST" id="set-goals-form" novalidate>
                     <div class="form-outline mb-4 text-start">
                         <label class="form-label" for="steps">歩数</label>
                         <input type="number" min="0" name="steps" id="steps" class="form-control form-control-lg"
@@ -156,6 +156,14 @@ try {
                 input.style.color = 'gray';
                 input.type = 'text';
             }
+        });
+
+        document.getElementById("set-goals-form").addEventListener("submit", function (event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add("was-validated");
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

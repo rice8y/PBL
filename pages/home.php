@@ -119,9 +119,9 @@ try {
     </nav>
     <div class="container text-center">
         <div class="row justify-content-md-center">
-            <div>
+            <div class="col-sm-5">
                 <br>
-                <form action="set_data.php" method="POST" id="steps-form" novalidate>
+                <form action="set_data.php" method="POST" id="set-data-form" novalidate>
                     <div class="form-outline mb-4 text-start">
                         <label class="form-label" for="steps">歩数</label>
                         <input type="number" name="steps" id="steps" class="form-control form-control-lg" required />
@@ -137,8 +137,7 @@ try {
                 </form>
                 <br>
             </div>
-            <div class="col-sm-9" id="plot"></div>
-            <div class="col-sm-3">
+            <div class="col-sm-7">
                 <div id="pie-chart" class="content">
                     <div class="pie-chart-wrap">
                         <div class="box blue" data-percent="0">
@@ -168,6 +167,7 @@ try {
                     </div>
                 </div>
             </div>
+            <div class="col-sm-12" id="plot"></div>
         </div>
     </div>
     <script>
@@ -207,12 +207,20 @@ try {
         document.addEventListener('DOMContentLoaded', function () {
             const boxes = document.querySelectorAll('.box');
 
-
             function updateCircle(box, percent) {
                 const circle = box.querySelector('.line');
                 const radius = circle.r.baseVal.value;
                 const circumference = 2 * Math.PI * radius;
-                const offset = circumference - (percent / 100 * circumference);
+                let offset = circumference - (percent / 100 * circumference);
+
+                if (percent > 100) {
+                    percent = 100;
+                    offset = 0;
+                    box.classList.add('over-100');
+                } else {
+                    box.classList.remove('over-100');
+                }
+
                 circle.style.strokeDashoffset = offset;
             }
 
@@ -234,7 +242,6 @@ try {
                 const sleepPercent = (total / parseFloat("<?php echo $target_sleep; ?>")) * 100;
                 document.querySelector('.box.blue').setAttribute('data-percent', sleepPercent.toFixed(2));
                 updateCircle(document.querySelector('.box.blue'), sleepPercent.toFixed(2));
-                console.log(sleepPercent);
             }
 
             if (stepsData.length > 0) {
@@ -246,6 +253,14 @@ try {
                 document.querySelector('.box.red').setAttribute('data-percent', stepsPercent.toFixed(2));
                 updateCircle(document.querySelector('.box.red'), stepsPercent.toFixed(2));
             }
+        });
+
+        document.getElementById("set-data-form").addEventListener("submit", function (event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add("was-validated");
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
