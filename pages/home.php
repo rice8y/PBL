@@ -28,10 +28,9 @@ try {
 
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $sleep_data = [];
-    $sleep_data[] = $row;
-    // $sl = explode(":", $);
-    // $hh = $sl[0];
-    // $mm = $sl[1];
+    if ($row) {
+        $sleep_data[] = $row;
+    }
 
 } catch (Exception $e) {
     echo "Caught exception: " . $e->getMessage();
@@ -75,9 +74,6 @@ try {
                     <li class="nav-item">
                         <a class="nav-link" href="logout_form.php">ログアウト</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
         </div>
@@ -86,11 +82,10 @@ try {
         <div id="plot"></div>
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
-                <!-- <div id="plot"></div> -->
                 <div>
                     <div id="pie-chart" class="content">
                         <div class="pie-chart-wrap">
-                            <div class="box blue" data-percent="88">
+                            <div class="box blue" data-percent="88">    <!-- 要修正 -->
                                 <h3>睡眠時間</h3>
                                 <div class="percent">
                                     <svg>
@@ -101,15 +96,8 @@ try {
                                         <h3 class="title"><span class="value">0</span><span>h</span></h3>
                                     </div>
                                 </div>
-                                <!-- <div class="input-field">
-                                    <label>Target: <input type="number" min="0" value="8" class="target-value">
-                                        h</label>
-                                    <label>Current: <input type="number" min="0" value="7" class="input-value">
-                                        h</label>
-                                    <button class="update-btn">更新</button>
-                                </div> -->
                             </div>
-                            <div class="box red" data-percent="65">
+                            <div class="box red" data-percent="65">    <!-- 要修正 -->
                                 <h3>歩数</h3>
                                 <div class="percent">
                                     <svg>
@@ -120,13 +108,6 @@ try {
                                         <h3 class="title"><span class="value">0</span><span>steps</span></h3>
                                     </div>
                                 </div>
-                                <!-- <div class="input-field">
-                                    <label>Target: <input type="number" min="0" value="3000" class="target-value">
-                                        steps</label>
-                                    <label>Current: <input type="number" min="0" value="2000" class="input-value">
-                                        steps</label>
-                                    <button class="update-btn">更新</button>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -154,6 +135,7 @@ try {
     <script>
         const myDiv = document.getElementById('plot');
         var stepsData = <?php echo json_encode($steps_data); ?>;
+        var sleepData = <?php echo json_encode($sleep_data); ?>;
 
         var xData = stepsData.map(item => item.time);
         var yData = stepsData.map(item => item.steps);
@@ -168,42 +150,40 @@ try {
 
         Plotly.newPlot(myDiv, data);
 
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const boxes = document.querySelectorAll('.box');
 
             boxes.forEach(box => {
-                const targetInput = <?php  ?>
-                const input = box.querySelector('.input-value');
-                const button = box.querySelector('.set');
+                const valueSpan = box.querySelector('.value');
+                const dataPercent = box.getAttribute('data-percent');
+                valueSpan.textContent = dataPercent;
 
-                button.addEventListener('click', () => {
-                    const targetHours = parseFloat(targetInput.value);
-                    const currentHours = parseFloat(input.value);
-                    const percent = (currentHours / targetHours) * 100;
-                    updateCircle(box, percent);
-                    box.querySelector('.value').textContent = currentHours;
-                });
+                updateCircle(box, dataPercent);
 
-                // 初期値で円グラフを更新
-                const initialTargetHours = parseFloat(targetInput.value);
-                const initialCurrentHours = parseFloat(input.value);
-                const initialPercent = (initialCurrentHours / initialTargetHours) * 100;
-                updateCircle(box, initialPercent);
-                box.querySelector('.value').textContent = initialCurrentHours;
+                function updateCircle(box, percent) {
+                    const circle = box.querySelector('.line');
+                    const radius = circle.r.baseVal.value;
+                    const circumference = 2 * Math.PI * radius;
+                    const offset = circumference - (percent / 100 * circumference);
+                    circle.style.strokeDashoffset = offset;
+                }
             });
 
-            function updateCircle(box, percent) {
-                const circle = box.querySelector('.line');
-                const radius = circle.r.baseVal.value;
-                const circumference = 2 * Math.PI * radius;
-                const offset = circumference - (percent / 100 * circumference);
-                circle.style.strokeDashoffset = offset;
+            if (sleepData.length > 0) {
+                const sleepValue = sleepData[0].sleep;
+                const [hours, minutes] = sleepValue.split(':').map(Number);
+                const total = hours + minutes / 60;
+                const sleepBox = document.querySelector('.box.blue .value');
+                sleepBox.textContent = total.toFixed(2);
+            }
+
+            if (stepsData.length > 0) {
+                const latestSteps = stepsData[stepsData.length - 1].steps;
+                const stepsBox = document.querySelector('.box.red .value');
+                stepsBox.textContent = latestSteps;
             }
         });
     </script>
-    <!-- contents -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>

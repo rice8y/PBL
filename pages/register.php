@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         header('Location: home.php');
         $sqlite->close();
     } catch (Exception $e) {
-        // if ($e->getCode() == 0) {
-        //     $_SESSION['error'] = "ユーザID: " . $username . " は既に存在します";
-        //     header('Location: register_form.php');
-        // } else {
-        //     echo "Caught exception: " . $e->getMessage();
-        // }
+        if ($e->getCode() == 0) {
+            $_SESSION['error'] = "ユーザID: " . $username . " は既に存在します";
+            header('Location: register_form.php');
+        } else {
+            echo "Caught exception: " . $e->getMessage();
+        }
     }
 }
 ?>
