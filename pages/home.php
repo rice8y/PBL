@@ -79,55 +79,54 @@ try {
         </div>
     </nav>
     <div class="container text-center">
-        <div id="plot"></div>
         <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-                <div>
-                    <div id="pie-chart" class="content">
-                        <div class="pie-chart-wrap">
-                            <div class="box blue" data-percent="88">
-                                <h3>睡眠時間</h3>
-                                <div class="percent">
-                                    <svg>
-                                        <circle class="base" cx="75" cy="75" r="70"></circle>
-                                        <circle class="line" cx="75" cy="75" r="70"></circle>
-                                    </svg>
-                                    <div class="number">
-                                        <h3 class="title"><span class="value">0</span><span>h</span></h3>
-                                    </div>
+            <div>
+                <br>
+                <form action="set_steps.php" method="POST" id="steps-form" novalidate>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="steps">歩数</label>
+                        <input type="number" name="steps" id="steps" class="form-control form-control-lg" required />
+                        <div class="invalid-feedback">歩数を入力して下さい</div>
+                    </div>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="sleep">睡眠時間</label>
+                        <input type="time" name="sleep" id="sleep" class="form-control form-control-lg" required />
+                        <div class="invalid-feedback">睡眠時間を入力して下さい</div>
+                    </div>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+                        type="submit" name="set">更新</button>
+                </form>
+                <br>
+            </div>
+            <div class="col-sm-9" id="plot"></div>
+            <div class="col-sm-3">
+                <div id="pie-chart" class="content">
+                    <div class="pie-chart-wrap">
+                        <div class="box blue" data-percent="88">
+                            <h3>睡眠時間</h3>
+                            <div class="percent">
+                                <svg>
+                                    <circle class="base" cx="75" cy="75" r="70"></circle>
+                                    <circle class="line" cx="75" cy="75" r="70"></circle>
+                                </svg>
+                                <div class="number">
+                                    <h3 class="title"><span class="value">0</span><span>h</span></h3>
                                 </div>
                             </div>
-                            <div class="box red" data-percent="65">
-                                <h3>歩数</h3>
-                                <div class="percent">
-                                    <svg>
-                                        <circle class="base" cx="75" cy="75" r="70"></circle>
-                                        <circle class="line" cx="75" cy="75" r="70"></circle>
-                                    </svg>
-                                    <div class="number">
-                                        <h3 class="title"><span class="value">0</span><span>steps</span></h3>
-                                    </div>
+                        </div>
+                        <div class="box red" data-percent="65">
+                            <h3>歩数</h3>
+                            <div class="percent">
+                                <svg>
+                                    <circle class="base" cx="75" cy="75" r="70"></circle>
+                                    <circle class="line" cx="75" cy="75" r="70"></circle>
+                                </svg>
+                                <div class="number">
+                                    <h3 class="title"><span class="value">0</span><span>steps</span></h3>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <form action="set_steps.php" method="POST" id="steps-form" novalidate>
-                        <div class="form-outline mb-4 text-start">
-                            <label class="form-label" for="steps">歩数</label>
-                            <input type="number" name="steps" id="steps" class="form-control form-control-lg"
-                                required />
-                            <div class="invalid-feedback">歩数を入力して下さい</div>
-                        </div>
-                        <div class="form-outline mb-4 text-start">
-                            <label class="form-label" for="sleep">睡眠時間</label>
-                            <input type="time" name="sleep" id="sleep" class="form-control form-control-lg" required />
-                            <div class="invalid-feedback">睡眠時間を入力して下さい</div>
-                        </div>
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
-                            type="submit" name="set">更新</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -156,10 +155,15 @@ try {
         var layout = {
             yaxis: {
                 rangemode: 'tozero'
-            }
+            },
+            responsive: true
         };
 
         Plotly.newPlot(myDiv, data, layout);
+
+        window.addEventListener('resize', () => {
+            Plotly.Plots.resize(myDiv);
+        });
 
         document.addEventListener('DOMContentLoaded', function () {
             const boxes = document.querySelectorAll('.box');
