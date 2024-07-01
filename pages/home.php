@@ -120,7 +120,7 @@ try {
     <div class="container text-center">
         <div class="row justify-content-md-center">
             <div class="col-sm-5">
-                <br>
+                <br><br>
                 <form action="set_data.php" method="POST" id="set-data-form" novalidate>
                     <div class="form-outline mb-4 text-start">
                         <label class="form-label" for="steps">歩数</label>
