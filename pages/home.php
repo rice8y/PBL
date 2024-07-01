@@ -72,9 +72,10 @@ try {
         </div>
     </nav>
     <div class="container text-center">
+        <div id="plot"></div>
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
-                <div id="plot"></div>
+                <!-- <div id="plot"></div> -->
                 <div>
                     <form action="set_steps.php" method="POST" id="steps-form" novalidate>
                         <div class="form-outline mb-4 text-start">
@@ -82,6 +83,12 @@ try {
                             <input type="number" name="steps" id="steps" class="form-control form-control-lg"
                                 required />
                             <div class="invalid-feedback">歩数を入力して下さい</div>
+                        </div>
+                        <div class="form-outline mb-4 text-start">
+                            <label class="form-label" for="sleep">睡眠時間</label>
+                            <input type="time" name="sleep" id="sleep" class="form-control form-control-lg"
+                                required />
+                            <div class="invalid-feedback">睡眠時間を入力して下さい</div>
                         </div>
                         <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
                             type="submit" name="set">更新</button>
