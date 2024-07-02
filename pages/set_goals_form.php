@@ -6,15 +6,16 @@ if (!isset($_SESSION['username'])) {
 }
 
 $db_file = "sqlite3.db";
+$tbl = "health_records";
 $username = $_SESSION['username'];
+$user_id = $_SESSION['user_id'];
 
 try {
     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
     $sqlite->enableExceptions(true);
 
-    $user_table = "user_" . SQLite3::escapeString($username);
-
-    $stmt = $sqlite->prepare("SELECT target_steps FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_steps FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $steps_data = [];
@@ -27,7 +28,8 @@ try {
         $target_steps = 9999;
     }
 
-    $stmt = $sqlite->prepare("SELECT target_sleep FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $sleep_data = [];
@@ -35,12 +37,13 @@ try {
         $sleep_data[] = $row;
         $json_sleep = json_encode($sleep_data);
         $json_sleep = json_decode($json_sleep, true);
-        $target_sleep = $json_sleep[0]['target_sleep'];
+        $target_sleep = $json_sleep[0]['target_sleep_time'];
     }else{
         $target_sleep = "24:00";
     }
 
-    $stmt = $sqlite->prepare("SELECT target_score FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_score FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $score_data = [];

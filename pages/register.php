@@ -11,19 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READWRITE);
         $sqlite->enableExceptions(true);
 
-        $user_table = "user_" . SQLite3::escapeString($username);
-        $create_user_table_query = "CREATE TABLE IF NOT EXISTS $user_table (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            steps INTEGER,
-            sleep TEXT,
-            target_steps INTEGER,
-            target_sleep TEXT,
-            target_score INTEGER,
-            time DATETIME NOT NULL UNIQUE DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
-        )";
-        $sqlite->exec($create_user_table_query);
-
-        $stmt = $sqlite->prepare("INSERT INTO userinfo (username, password) VALUES (:username, :password)");
+        $stmt = $sqlite->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
         $stmt->bindValue(':username', $username, SQLITE3_TEXT);
         $stmt->bindValue(':password', $hashed_password, SQLITE3_TEXT);
         $stmt->execute();

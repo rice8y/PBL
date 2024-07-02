@@ -6,14 +6,24 @@ if (!isset($_SESSION['username'])) {
 }
 
 $db_file = "sqlite3.db";
+$tbl = "health_records";
 $username = $_SESSION['username'];
 
 try {
     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
     $sqlite->enableExceptions(true);
 
-    $user_table = "user_" . SQLite3::escapeString($username);
-    $stmt = $sqlite->prepare("SELECT steps, time FROM $user_table ORDER BY time DESC LIMIT 7");
+    $stmt = $sqlite->prepare("SELECT user_id FROM users WHERE username = :username");
+    $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+    $result = $stmt->execute();
+    $user_id = null;
+    if ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $user_id = $row['user_id'];
+    }
+    $_SESSION['user_id'] = $user_id;
+
+    $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 7");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
 
     $steps_data = [];
@@ -23,7 +33,8 @@ try {
 
     $steps_data = array_reverse($steps_data);
 
-    $stmt = $sqlite->prepare("SELECT sleep FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
 
     $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -32,7 +43,8 @@ try {
         $sleep_data[] = $row;
     }
 
-    $stmt = $sqlite->prepare("SELECT target_steps FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_steps FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $tsteps_data = [];
@@ -45,7 +57,8 @@ try {
         $target_steps = 9999;
     }
 
-    $stmt = $sqlite->prepare("SELECT target_sleep FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $tsleep_data = [];
@@ -53,12 +66,13 @@ try {
         $tsleep_data[] = $row;
         $json_sleep = json_encode($tsleep_data);
         $json_sleep = json_decode($json_sleep, true);
-        $target_sleep = $json_sleep[0]['target_sleep'];
+        $target_sleep = $json_sleep[0]['target_sleep_time'];
     } else {
         $target_sleep = "24.00";
     }
 
-    $stmt = $sqlite->prepare("SELECT target_score FROM $user_table ORDER BY time DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_score FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $tscore_data = [];
@@ -178,7 +192,7 @@ try {
         var stepsData = <?php echo json_encode($steps_data); ?>;
         var sleepData = <?php echo json_encode($sleep_data); ?>;
 
-        var xData = stepsData.map(item => new Date(item.time));
+        var xData = stepsData.map(item => new Date(item.date));
         var yData = stepsData.map(item => item.steps);
 
         var formattedXData = xData.map(date => {
@@ -236,7 +250,7 @@ try {
             });
 
             if (sleepData.length > 0) {
-                const sleepValue = sleepData[0].sleep;
+                const sleepValue = sleepData[0].sleep_time;
                 const [hours, minutes] = sleepValue.split(':').map(Number);
                 const total = hours + minutes / 60;
                 const sleepBox = document.querySelector('.box.blue .value');
