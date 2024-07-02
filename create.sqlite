@@ -23,7 +23,7 @@ CREATE TABLE health_records (
     user_id INTEGER,
     date DATE DEFAULT (date(CURRENT_TIMESTAMP, 'localtime')),
     height DECIMAL(5, 2),
-    wight DECIMAL(5, 2),
+    weight DECIMAL(5, 2),
     steps INTEGER,
     target_steps INTEGER,
     sleep_time TIME,
