@@ -5,6 +5,8 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     date_of_birth DATE,
     gender TEXT,
+    height DECIMAL(5, 2),
+    weight DECIMAL(5, 2),
     created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
     updated_at TIMESTAMP DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
 );
@@ -22,8 +24,6 @@ CREATE TABLE health_records (
     record_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     date DATE DEFAULT (date(CURRENT_TIMESTAMP, 'localtime')),
-    height DECIMAL(5, 2),
-    weight DECIMAL(5, 2),
     steps INTEGER,
     target_steps INTEGER,
     sleep_time TIME,

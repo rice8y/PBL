@@ -4,6 +4,28 @@ if (!isset($_SESSION['username'])) {
     header('Location: login_form.php');
     exit;
 }
+
+$db_file = "sqlite3.db";
+$tbl = "users";
+$username = $_SESSION['username'];
+$user_id = $_SESSION['user_id'];
+
+try {
+    $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
+    $sqlite->enableExceptions(true);
+
+    $stmt = $sqlite->prepare("SELECT nickname, height, weight, date_of_birth, gender FROM $tbl WHERE username = :username");
+    $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+    $result = $stmt->execute();
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $nickname = $row ? $row['nickname'] : null;
+    $height = $row ? $row['height'] : null;
+    $weight = $row ? $row['weight'] : null;
+    $birth = $row ? $row['date_of_birth'] : null;
+    $gender = $row ? $row['gender'] : null;
+} catch (Exception $e) {
+    echo "Caught exception: " . $e->getMessage();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -12,7 +34,8 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 
 <body>
@@ -43,15 +66,90 @@ if (!isset($_SESSION['username'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="logout_form.php">ログアウト</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> -->
                 </ul>
             </div>
         </div>
     </nav>
-    <!-- contents -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <div class="container text-center">
+        <div class="row justify-content-md-center">
+            <div>
+                <br>
+                <form action="set_profile.php" method="POST" id="set-profile-form">
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="nickname">ニックネーム</label>
+                        <input type="text" name="nickname" id="nickname" class="form-control form-control-lg"
+                            placeholder="<?php echo $nickname; ?>" />
+                    </div>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="birth">誕生日</label>
+                        <input type="date" name="birth" id="birth" class="form-control form-control-lg"
+                            value="<?php echo $birth; ?>" onfocus="removePlaceholder()" onblur="addPlaceholder()" />
+                    </div>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="gender">性別</label>
+                        <select name="gender" id="gender" class="form-control form-control-lg">
+                            <option value="" disabled <?php echo $gender === null ? 'selected' : ''; ?>>選択してください</option>
+                            <option value="male" <?php echo $gender === 'male' ? 'selected' : ''; ?>>男性</option>
+                            <option value="female" <?php echo $gender === 'female' ? 'selected' : ''; ?>>女性</option>
+                            <option value="other" <?php echo $gender === 'other' ? 'selected' : ''; ?>>その他</option>
+                        </select>
+                    </div>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="height">身長 [cm]</label>
+                        <input type="number" min="0" step="0.01" name="height" id="height"
+                            class="form-control form-control-lg" placeholder="<?php echo $height; ?>" />
+                    </div>
+                    <div class="form-outline mb-4 text-start">
+                        <label class="form-label" for="weight">体重 [kg]</label>
+                        <input type="number" min="0" step="0.01" name="weight" id="weight"
+                            class="form-control form-control-lg" placeholder="<?php echo $weight; ?>" />
+                    </div>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+                        type="submit" name="set">更新</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function addPlaceholder() {
+            const input = document.getElementById('birth');
+            if (input.value === '') {
+                input.type = 'text';
+                input.value = '<?php echo $birth; ?>';
+                input.style.color = 'gray';
+            }
+        }
+
+        function removePlaceholder() {
+            const input = document.getElementById('birth');
+            if (input.value === '<?php echo $birth; ?>') {
+                input.value = '';
+                input.type = 'date';
+                input.style.color = 'black';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('birth');
+            if (input.value === '<?php echo $birth; ?>' || input.value === '') {
+                input.value = '<?php echo $birth; ?>';
+                input.style.color = 'gray';
+                input.type = 'text';
+            }
+        });
+
+        $(function () {
+            $('#gender').on('change', function () {
+                $(this).find('option').css('color', 'black');
+                $(this).find('option:selected').css('color', 'gray');
+            }).trigger('change');
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

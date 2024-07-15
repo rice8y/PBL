@@ -6,26 +6,27 @@ if (!isset($_SESSION['username'])) {
 }
 
 $db_file = "sqlite3.db";
-$tbl = "health_records";
+$tbl1 = "users";
+$tbl2 = "health_records";
 $username = $_SESSION['username'];
 
 try {
     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
     $sqlite->enableExceptions(true);
 
-    $stmt = $sqlite->prepare("SELECT user_id FROM users WHERE username = :username");
+    $stmt = $sqlite->prepare("SELECT user_id, height, weight FROM $tbl1 WHERE username = :username");
     $stmt->bindValue(':username', $username, SQLITE3_TEXT);
     $result = $stmt->execute();
-    $user_id = null;
-    if ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $user_id = $row['user_id'];
-    }
+    $row = $result->fetchArray(SQLITE3_ASSOC);
+    $user_id = $row ? $row['user_id'] : null;
     $_SESSION['user_id'] = $user_id;
+    $height = $row ? $row['height'] : null;
+    $weight = $row ? $row['weight'] : null;
 
     $current_date = date('Y-m-d');
     $date_six_days_ago = date('Y-m-d', strtotime('-6 days', strtotime($current_date)));
 
-    $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id AND date BETWEEN :start_date AND :end_date ORDER BY date ASC");
+    $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl2 WHERE user_id = :user_id AND date BETWEEN :start_date AND :end_date ORDER BY date ASC");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $stmt->bindValue(':start_date', $date_six_days_ago);
     $stmt->bindValue(':end_date', $current_date);
@@ -40,7 +41,7 @@ try {
         $steps_data[$row['date']] = $row['steps'];
     }
 
-    $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl WHERE user_id = :user_id AND date = :current_date");
+    $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl2 WHERE user_id = :user_id AND date = :current_date");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $stmt->bindValue("current_date", $current_date);
     $result = $stmt->execute();
@@ -53,7 +54,7 @@ try {
         $sleep_data = ['sleep_time' => 0];
     }
 
-    $stmt = $sqlite->prepare("SELECT target_steps FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_steps FROM $tbl2 WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -67,7 +68,7 @@ try {
         $target_steps = 9999;
     }
 
-    $stmt = $sqlite->prepare("SELECT target_sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_sleep_time FROM $tbl2 WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -81,7 +82,7 @@ try {
         $target_sleep = "24.00";
     }
 
-    $stmt = $sqlite->prepare("SELECT target_score FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT target_score FROM $tbl2 WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -97,6 +98,47 @@ try {
 
 } catch (Exception $e) {
     echo "Caught exception: " . $e->getMessage();
+}
+
+function bmi($h, $w)
+{
+    return number_format($w / pow($h / 100, 2), 2);
+}
+function aw($h)
+{
+    return pow($h / 100, 2) * 22;
+}
+function diff($h, $w)
+{
+    return number_format($w - aw($h), 2);
+}
+function eval_bmi($bmi)
+{
+    if (0 <= $bmi && $bmi < 18.5) {
+        return "低体重(痩せ型)";
+    } else if ($bmi < 25) {
+        return "普通体重";
+    } else if ($bmi < 30) {
+        return "肥満(1度)";
+    } else if ($bmi < 35) {
+        return "肥満(2度)";
+    } else if ($bmi < 40) {
+        return "肥満(3度)";
+    } else {
+        return "肥満(4度)";
+    }
+}
+
+$diff_value = diff($height, $weight);
+if ($diff_value > 0) {
+    $diff_class = "text-danger";
+} else if ($diff_value < 0) {
+    $diff_class = "text-primary";
+} else {
+    $diff_class = "text-success";
+}
+if ($diff_class === "text-danger") {
+    $diff_value = '+' . $diff_value;
 }
 ?>
 <!DOCTYPE html>
@@ -144,6 +186,10 @@ try {
             </div>
         </div>
     </nav>
+    <div class="container">
+        <br>
+        <h2 class="text-left">活動記録</h2><br>
+    </div>
     <div class="container text-center">
         <div class="row justify-content-md-center">
             <div class="col-sm-5">
@@ -196,6 +242,29 @@ try {
             </div>
             <div class="col-sm-12" id="plot"></div>
         </div>
+    </div>
+    <div class="container">
+        <br>
+        <h2 class="text-left">身体状況</h2><br>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">BMI</th>
+                    <th scope="col">適正体重 [kg]</th>
+                    <th scope="col">適正体重との比較 [kg]</th>
+                    <th scope="col">評価</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo bmi($height, $weight); ?></td>
+                    <td><?php echo number_format(aw($height), 2); ?></td>
+                    <td><span class="<?php echo $diff_class; ?>"><?php echo $diff_value; ?></span></td>
+                    <td><?php echo eval_bmi(bmi($height, $weight)); ?></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <script>
         const myDiv = document.getElementById('plot');
