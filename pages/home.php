@@ -25,10 +25,6 @@ try {
     $current_date = date('Y-m-d');
     $date_six_days_ago = date('Y-m-d', strtotime('-6 days', strtotime($current_date)));
 
-    // $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 7");
-    // $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
-    // $result = $stmt->execute();
-
     $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id AND date BETWEEN :start_date AND :end_date ORDER BY date ASC");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
     $stmt->bindValue(':start_date', $date_six_days_ago);
@@ -36,28 +32,25 @@ try {
     $result = $stmt->execute();
 
     $steps_data = [];
-    // while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-    //     $steps_data[] = $row;
-    // }
     for ($date = strtotime($date_six_days_ago); $date <= strtotime($current_date); $date = strtotime('+1 day', $date)) {
         $formatted_date = date('Y-m-d', $date);
-        $steps_data[$formatted_date] = 0;  // 初期値として0をセット
+        $steps_data[$formatted_date] = 0;
     }
-
     while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         $steps_data[$row['date']] = $row['steps'];
     }
 
-    // $steps_data = array_reverse($steps_data);
-
-    $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
+    $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl WHERE user_id = :user_id AND date = :current_date");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue("current_date", $current_date);
     $result = $stmt->execute();
 
     $row = $result->fetchArray(SQLITE3_ASSOC);
     $sleep_data = [];
     if ($row) {
-        $sleep_data[] = $row;
+        $sleep_data = $row;
+    } else {
+        $sleep_data = ['sleep_time' => 0];
     }
 
     $stmt = $sqlite->prepare("SELECT target_steps FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
@@ -151,7 +144,6 @@ try {
             </div>
         </div>
     </nav>
-    <?php echo json_encode($steps_data); ?>
     <div class="container text-center">
         <div class="row justify-content-md-center">
             <div class="col-sm-5">
@@ -209,6 +201,7 @@ try {
         const myDiv = document.getElementById('plot');
         var stepsData = <?php echo json_encode($steps_data); ?>;
         var sleepData = <?php echo json_encode($sleep_data); ?>;
+        const sleepTime = Object.values(sleepData);
 
         const xData = Object.keys(stepsData);
         const yData = Object.values(stepsData);
@@ -268,8 +261,8 @@ try {
                 updateCircle(box, dataPercent);
             });
 
-            if (sleepData.length > 0) {
-                const sleepValue = sleepData[0].sleep_time;
+            if (sleepTime.length > 0) {
+                const sleepValue = sleepTime[0];
                 const [hours, minutes] = sleepValue.split(':').map(Number);
                 const total = hours + minutes / 60;
                 const sleepBox = document.querySelector('.box.blue .value');
