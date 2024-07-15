@@ -22,16 +22,33 @@ try {
     }
     $_SESSION['user_id'] = $user_id;
 
-    $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 7");
+    $current_date = date('Y-m-d');
+    $date_six_days_ago = date('Y-m-d', strtotime('-6 days', strtotime($current_date)));
+
+    // $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 7");
+    // $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
+    // $result = $stmt->execute();
+
+    $stmt = $sqlite->prepare("SELECT steps, date FROM $tbl WHERE user_id = :user_id AND date BETWEEN :start_date AND :end_date ORDER BY date ASC");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
+    $stmt->bindValue(':start_date', $date_six_days_ago);
+    $stmt->bindValue(':end_date', $current_date);
     $result = $stmt->execute();
 
     $steps_data = [];
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $steps_data[] = $row;
+    // while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+    //     $steps_data[] = $row;
+    // }
+    for ($date = strtotime($date_six_days_ago); $date <= strtotime($current_date); $date = strtotime('+1 day', $date)) {
+        $formatted_date = date('Y-m-d', $date);
+        $steps_data[$formatted_date] = 0;  // 初期値として0をセット
     }
 
-    $steps_data = array_reverse($steps_data);
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $steps_data[$row['date']] = $row['steps'];
+    }
+
+    // $steps_data = array_reverse($steps_data);
 
     $stmt = $sqlite->prepare("SELECT sleep_time FROM $tbl WHERE user_id = :user_id ORDER BY date DESC LIMIT 1");
     $stmt->bindValue(':user_id', $user_id, SQLITE3_INTEGER);
@@ -134,6 +151,7 @@ try {
             </div>
         </div>
     </nav>
+    <?php echo json_encode($steps_data); ?>
     <div class="container text-center">
         <div class="row justify-content-md-center">
             <div class="col-sm-5">
@@ -192,12 +210,13 @@ try {
         var stepsData = <?php echo json_encode($steps_data); ?>;
         var sleepData = <?php echo json_encode($sleep_data); ?>;
 
-        var xData = stepsData.map(item => new Date(item.date));
-        var yData = stepsData.map(item => item.steps);
+        const xData = Object.keys(stepsData);
+        const yData = Object.values(stepsData);
 
-        var formattedXData = xData.map(date => {
+        const formattedXData = xData.map(date => {
             const options = { month: 'short', day: 'numeric', weekday: 'short' };
-            return date.toLocaleDateString('ja-JP', options);
+            const parsedDate = new Date(date);
+            return parsedDate.toLocaleDateString('ja-JP', options);
         });
 
         var data = [
@@ -261,8 +280,8 @@ try {
                 updateCircle(document.querySelector('.box.blue'), sleepPercent.toFixed(2));
             }
 
-            if (stepsData.length > 0) {
-                const latestSteps = stepsData[stepsData.length - 1].steps;
+            if (yData.length > 0) {
+                const latestSteps = yData[6];
                 const stepsBox = document.querySelector('.box.red .value');
                 stepsBox.textContent = latestSteps;
 
