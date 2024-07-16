@@ -19,7 +19,18 @@ cd PBL
 sqlite3 < create.sql
 ```
 
-### 3. ログイン画面にアクセス
+### 3. cron ジョブの設定
+
+`crontab -e` で crontab ファイルを開き, 以下を記述する.
+
+```git
+0 0 * * * /usr/bin/php your_path/PBL/pages/reset_state.php
+```
+
+>[!WARNING]
+>`your_path` は自身のパスに置き換えること. また, 必要に応じて `/usr/bin/php` も置き換えること.
+
+### 4. ログイン画面にアクセス
 
 ```git
 https://your_server/your_path/PBL/pages/login_form.php
