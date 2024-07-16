@@ -17,9 +17,9 @@
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
                             <h3 class="mb-5">ログアウト</h3>
-                            <form action="login.php" method="POST" id="logout-form" novalidate>
+                            <form action="logout.php" method="POST" id="logout-form" novalidate>
                                 <div class="mb-3">
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit" name="login">ログアウト</button>
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit" name="logout">ログアウト</button>
                                 </div>
                                 <div>
                                     <button class="btn btn-secondary btn-lg btn-block" type="button" name="back"

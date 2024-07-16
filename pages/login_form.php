@@ -25,7 +25,6 @@
                                     <input type="password" id="typePasswordX-2" class="form-control form-control-lg" name="password" required />
                                     <div class="invalid-feedback">パスワードを入力して下さい</div>
                                 </div>
-                                <!-- Checkbox -->
                                 <div class="form-check d-flex justify-content-start mb-4">
                                     <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
                                     <label class="form-check-label" for="form1Example3">入力を保持する</label>
