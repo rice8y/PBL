@@ -1,4 +1,4 @@
-DROP IF EXITS DATABASE sqlite3.db;
+DROP IF EXIsTS DATABASE sqlite3.db;
 
 .open sqlite3.db
 
