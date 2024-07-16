@@ -4,6 +4,7 @@
 
 ```git
 git clone https://github.com/rice8y/PBL.git
+cd PBL
 sqlite3 < create.sql
 ```
 

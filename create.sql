@@ -1,5 +1,3 @@
-DROP IF EXIsTS DATABASE sqlite3.db;
-
 .open sqlite3.db
 
 CREATE TABLE users (
