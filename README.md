@@ -68,6 +68,7 @@ https://your_server/your_path/PBL/pages/login_form.php
   - [add_list.php](pages/add_list.php): タスク追加処理
   - [delete_list.php](pages/delete_list.php): タスク削除処理
   - [change_state.php](pages/change_state.php): タスク状況監視処理
+  - [reset_state.php](pages/reset_state.php): タスク状況リセット処理
 - [mail_form.php](pages/mail_form.php): お問い合わせ画面
   - [thanks.php](pages/thanks.php): Thanks画面
 - [logout_form.php](pages/logout_form.php): ログアウト画面
