@@ -2,11 +2,31 @@
 
 [テストページ](https://sshg.cs.ehime-u.ac.jp/~j496yone/pblone/test/login_form.php)
 
+## Usage
+
+### 1. git clone
+
+公開ディレクトリ配下で git clone する.
+
 ```git
 git clone https://github.com/rice8y/PBL.git
 cd PBL
+```
+
+### 2. データベースの作成
+
+```git
 sqlite3 < create.sql
 ```
+
+### 3. ログイン画面にアクセス
+
+```git
+https://your_server/your_path/PBL/pages/login_form.php
+```
+
+>[!WARNING]
+>`your_server`, `your_path` は自身のサーバ, パスに置き換えること. また, ログイン画面から新規登録画面に遷移し, 新規登録すること.
 
 ## 製作物
 
@@ -38,7 +58,6 @@ sqlite3 < create.sql
   - [delete_list.php](pages/delete_list.php): タスク削除処理
   - [change_state.php](pages/change_state.php): タスク状況監視処理
 - [mail_form.php](pages/mail_form.php): お問い合わせ画面
-  - [mail.php](pages/mail.php): お問い合わせ処理
   - [thanks.php](pages/thanks.php): Thanks画面
 - [logout_form.php](pages/logout_form.php): ログアウト画面
   - [logout.php](pages/logout.php): ログアウト処理
