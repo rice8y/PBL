@@ -8,6 +8,7 @@ if (!isset($_SESSION['username'])) {
 $db_file = "sqlite3.db";
 $tbl1 = "users";
 $tbl2 = "health_records";
+$tbl3 = "check_lists";
 $username = $_SESSION['username'];
 
 try {
@@ -94,6 +95,26 @@ try {
         $target_score = $json_score[0]['target_score'];
     } else {
         $target_score = 100;
+    }
+
+    $stmt = $sqlite->prepare("SELECT list_id, item, state FROM $tbl3 WHERE user_id = :user_id ORDER BY list_id");
+    $stmt->bindValue(':user_id', $user_id, SQLITE3_TEXT);
+    $result = $stmt->execute();
+    $items = [];
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $items[] = $row;
+    }
+
+    $total_items = count($items);
+    $checked_items = array_filter($items, function ($item) {
+        return $item['state'] == 1;
+    });
+    $checked_count = count($checked_items);
+
+    if ($total_items > 0) {
+        $score = ($checked_count * 100) / $total_items;
+    } else {
+        $score = 0;
     }
 
 } catch (Exception $e) {
@@ -192,7 +213,7 @@ if ($diff_class === "text-danger") {
     </div>
     <div class="container text-center">
         <div class="row justify-content-md-center">
-            <div class="col-sm-5">
+            <div class="col-sm-7">
                 <br><br>
                 <form action="set_data.php" method="POST" id="set-data-form" novalidate>
                     <div class="form-outline mb-4 text-start">
@@ -210,7 +231,7 @@ if ($diff_class === "text-danger") {
                 </form>
                 <br>
             </div>
-            <div class="col-sm-7">
+            <div class="col-sm-12">
                 <div id="pie-chart" class="content">
                     <div class="pie-chart-wrap">
                         <div class="box blue" data-percent="0">
@@ -237,18 +258,18 @@ if ($diff_class === "text-danger") {
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="box green" data-percent="0">
-                            <h3>歩数</h3>
+                        <div class="box green" data-percent="0">
+                            <h3>目標スコア</h3>
                             <div class="percent">
                                 <svg>
                                     <circle class="base" cx="75" cy="75" r="70"></circle>
                                     <circle class="line" cx="75" cy="75" r="70"></circle>
                                 </svg>
                                 <div class="number">
-                                    <h3 class="title"><span class="value">0</span><span>steps</span></h3>
+                                    <h3 class="title"><span class="value">0</span><span>points</span></h3>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,7 +279,6 @@ if ($diff_class === "text-danger") {
     <div class="container">
         <br>
         <h2 class="text-left">身体状況</h2><br>
-
         <table class="table">
             <thead>
                 <tr>
@@ -282,8 +302,8 @@ if ($diff_class === "text-danger") {
         const myDiv = document.getElementById('plot');
         var stepsData = <?php echo json_encode($steps_data); ?>;
         var sleepData = <?php echo json_encode($sleep_data); ?>;
+        var targetScore = <?php echo json_encode($target_score); ?>;
         const sleepTime = Object.values(sleepData);
-
         const xData = Object.keys(stepsData);
         const yData = Object.values(stepsData);
 
@@ -362,6 +382,15 @@ if ($diff_class === "text-danger") {
                 const stepsPercent = (latestSteps / parseInt("<?php echo $target_steps; ?>")) * 100;
                 document.querySelector('.box.red').setAttribute('data-percent', stepsPercent.toFixed(2));
                 updateCircle(document.querySelector('.box.red'), stepsPercent.toFixed(2));
+            }
+
+            if (targetScore > 0) {
+                const scoreBox = document.querySelector('.box.green .value');
+                scoreBox.textContent = <?php echo $score; ?>;
+
+                const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
+                document.querySelector('.box.green').setAttribute('data-percent', scorePercent.toFixed(2));
+                updateCircle(document.querySelector('.box.green'), scorePercent.toFixed(2));
             }
         });
 
