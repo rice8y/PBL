@@ -91,9 +91,10 @@ try {
     <div class="container">
         <br>
         <div class="d-flex justify-content-center">
-            <form action="add_list.php" method="POST" id="add-lists-form" class="form-inline-custom col-10" novalidate>
+            <form action="add_list.php" method="POST" id="add-list-form" class="form-inline-custom col-10" novalidate>
                 <div class="input-col">
-                    <input class="form-control" type="text" name="item" id="item" placeholder="タスクを入力">
+                    <input class="form-control" type="text" name="item" id="item" placeholder="タスクを入力" required>
+                    <div class="invalid-feedback">タスクを入力して下さい</div>
                 </div>
                 <div class="button-col">
                     <button class="btn btn-primary btn-sm" type="submit" name="add">追加</button>
@@ -152,6 +153,15 @@ try {
                 form.submit();
             }
         }
+    </script>
+    <script>
+        document.getElementById("add-list-form").addEventListener("submit", function (event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add("was-validated");
+        });
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
