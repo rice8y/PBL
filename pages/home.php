@@ -237,6 +237,18 @@ if ($diff_class === "text-danger") {
                                 </div>
                             </div>
                         </div>
+                        <!-- <div class="box green" data-percent="0">
+                            <h3>歩数</h3>
+                            <div class="percent">
+                                <svg>
+                                    <circle class="base" cx="75" cy="75" r="70"></circle>
+                                    <circle class="line" cx="75" cy="75" r="70"></circle>
+                                </svg>
+                                <div class="number">
+                                    <h3 class="title"><span class="value">0</span><span>steps</span></h3>
+                                </div>
+                            </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
