@@ -1,3 +1,7 @@
+DROP IF EXITS DATABASE sqlite3.db;
+
+.open sqlite3.db
+
 CREATE TABLE users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
