@@ -386,7 +386,8 @@ if ($diff_class === "text-danger") {
 
             if (targetScore > 0) {
                 const scoreBox = document.querySelector('.box.green .value');
-                scoreBox.textContent = <?php echo $score; ?>;
+                scoreBox.textContent = <?php echo $score; ?> .toFixed(0);
+
 
                 const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
                 document.querySelector('.box.green').setAttribute('data-percent', scorePercent.toFixed(2));
