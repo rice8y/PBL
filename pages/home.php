@@ -213,7 +213,7 @@ if ($diff_class === "text-danger") {
     </div>
     <div class="container text-center">
         <div class="row justify-content-md-center">
-            <div class="col-sm-5">
+            <div class="col-sm-7">
                 <br><br>
                 <form action="set_data.php" method="POST" id="set-data-form" novalidate>
                     <div class="form-outline mb-4 text-start">
@@ -231,7 +231,7 @@ if ($diff_class === "text-danger") {
                 </form>
                 <br>
             </div>
-            <div class="col-sm-7">
+            <div class="col-sm-12">
                 <div id="pie-chart" class="content">
                     <div class="pie-chart-wrap">
                         <div class="box blue" data-percent="0">
@@ -258,7 +258,7 @@ if ($diff_class === "text-danger") {
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="box green" data-percent="0">
+                        <div class="box green" data-percent="0">
                             <h3>目標スコア</h3>
                             <div class="percent">
                                 <svg>
@@ -269,7 +269,7 @@ if ($diff_class === "text-danger") {
                                     <h3 class="title"><span class="value">0</span><span>points</span></h3>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,7 +364,7 @@ if ($diff_class === "text-danger") {
 
             if (sleepTime.length > 0) {
                 const sleepValue = sleepTime[0];
-                const [hours, minutes] = sleepValue.split(':').map(Number);
+                const [hours, minutes] = sleepValue !== 0 ? sleepValue.split(':').map(Number) : [0, 0];
                 const total = hours + minutes / 60;
                 const sleepBox = document.querySelector('.box.blue .value');
                 sleepBox.textContent = total.toFixed(2);
