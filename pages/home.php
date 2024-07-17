@@ -15,7 +15,7 @@ try {
     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READONLY);
     $sqlite->enableExceptions(true);
 
-    $stmt = $sqlite->prepare("SELECT user_id, height, weight FROM $tbl1 WHERE username = :username");
+    $stmt = $sqlite->prepare("SELECT user_id, height, weight , nickname FROM $tbl1 WHERE username = :username");
     $stmt->bindValue(':username', $username, SQLITE3_TEXT);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
@@ -23,6 +23,7 @@ try {
     $_SESSION['user_id'] = $user_id;
     $height = $row ? $row['height'] : null;
     $weight = $row ? $row['weight'] : null;
+    $nickname = $row ? $row['nickname'] : $username;
 
     $current_date = date('Y-m-d');
     $date_six_days_ago = date('Y-m-d', strtotime('-6 days', strtotime($current_date)));
@@ -173,6 +174,11 @@ if ($diff_class === "text-danger") {
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="circle.css">
+    <style>
+        .welcome{
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -208,8 +214,8 @@ if ($diff_class === "text-danger") {
         </div>
     </nav>
     <div class="container">
-        <br>
-        <h2 class="text-left">活動記録</h2><br>
+        <h2 class="welcome">ようこそ、<?php echo $nickname; ?>さん</h2>
+        <h3 class="text-left">活動記録</h3><br>
     </div>
     <div class="container text-center">
         <div class="row justify-content-md-center">
@@ -278,7 +284,7 @@ if ($diff_class === "text-danger") {
     </div>
     <div class="container">
         <br>
-        <h2 class="text-left">身体状況</h2><br>
+        <h3 class="text-left">身体状況</h3><br>
         <table class="table">
             <thead>
                 <tr>
