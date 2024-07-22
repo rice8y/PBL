@@ -23,7 +23,7 @@ try {
     $_SESSION['user_id'] = $user_id;
     $height = $row ? $row['height'] : null;
     $weight = $row ? $row['weight'] : null;
-    $nickname = $row ? $row['nickname'] : $username;
+    $nickname = $row['nickname'] ? $row['nickname'] : $username;
 
     $current_date = date('Y-m-d');
     $date_six_days_ago = date('Y-m-d', strtotime('-6 days', strtotime($current_date)));
