@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-    $db_file = "sqlite3.db";
+    $db_file = "../sqlite3.db";
     $tbl_name = "users";
     $username = $_POST['username'];
     $password = $_POST['password'];

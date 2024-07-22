@@ -1,7 +1,7 @@
 <?php
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
-    $db_file = "sqlite3.db";
+    $db_file = "../sqlite3.db";
     $username = $_POST['username'];
     $password = $_POST['password'];
 

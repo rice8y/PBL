@@ -5,7 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-$db_file = "sqlite3.db";
+$db_file = "../sqlite3.db";
 $tbl = "users";
 $username = $_SESSION['username'];
 $user_id = $_SESSION['user_id'];

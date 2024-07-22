@@ -5,7 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-$db_file = "sqlite3.db";
+$db_file = "../sqlite3.db";
 $tbl1 = "users";
 $tbl2 = "health_records";
 $tbl3 = "check_lists";

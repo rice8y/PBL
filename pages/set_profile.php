@@ -1,7 +1,7 @@
 <?php
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['set'])) {
-    $db_file = "sqlite3.db";
+    $db_file = "../sqlite3.db";
     $tbl = "users";
     $username = $_SESSION['username'];
     $nickname = !empty($_POST['nickname']) ? $_POST['nickname'] : null;

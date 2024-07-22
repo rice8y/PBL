@@ -1,7 +1,7 @@
 <?php
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add'])) {
-    $db_file = "sqlite3.db";
+    $db_file = "../sqlite3.db";
     $tbl = "check_lists";
     $username = $_SESSION['username'];
     $user_id = $_SESSION['user_id'];
