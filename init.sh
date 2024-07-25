@@ -1,5 +1,8 @@
 #!/usr/bin/sh
 
+# This is a health initialization tool.
+# Process: Create the database and change the appropriate permissions.
+
 sqlite3 < create.sql
 chmod +x pages/reset_state.php
 chmod a+rw sqlite3.db
