@@ -13,22 +13,18 @@ git clone https://github.com/rice8y/PBL.git
 cd PBL
 ```
 
-### 2. データベースの作成
+### 2. 初期設定
 
 ```git
-sqlite3 < create.sql
+chmod +x init.sh
+./init.sh
 ```
 
-### 3. cron ジョブの設定
-
-`crontab -e` で crontab ファイルを開き, 以下を記述する.
-
-```git
-0 0 * * * /usr/bin/php your_path/PBL/pages/reset_state.php
-```
-
->[!WARNING]
->`your_path` は自身のパスに置き換えること. また, 必要に応じて `/usr/bin/php` も置き換えること.
+>[!NOTE]
+> `init.sh` で行っていることは以下の通りです.
+> - データベースの作成
+> - パーミッションの変更
+> - Cron ジョブの設定
 
 ### 4. ログイン画面にアクセス
 
