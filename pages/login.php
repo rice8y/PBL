@@ -28,6 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         $sqlite->close();
     } catch (Exception $e) {
         echo "Caught exception: " . $e->getMessage();
+        exit;
+    } finally {
+        if (isset($sqlite)) {
+            $sqlite->close();
+        }
     }
 }
 ?>
