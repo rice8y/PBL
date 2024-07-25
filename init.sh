@@ -16,7 +16,7 @@ crontab "$TEMP_CRON"
 rm "$TEMP_CRON"
 
 SERVER_NAME=$(hostname)
-PUBLICK_LINK="https://$SERVER_NAME/$CURRENT_DIR"
+PUBLICK_LINK="https://$SERVER_NAME$CURRENT_DIR"
 
 if [ $? -eq 0 ]; then
     echo "Successfully initislized."
