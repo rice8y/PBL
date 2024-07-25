@@ -1,7 +1,10 @@
 #!/usr/bin/sh
 
+# =======================================================================================================================
 # This is a health initialization tool.
 # Process: Create the database and change the appropriate permissions.
+# Note: The link displayed upon successful initialization assumes that the server in use Ehime University's web server.
+# =======================================================================================================================
 
 sqlite3 < create.sql
 chmod +x pages/reset_state.php
