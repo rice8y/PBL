@@ -124,11 +124,19 @@ try {
 
 function bmi($h, $w)
 {
-    return number_format($w / pow($h / 100, 2), 2);
+    if ($h > 0) {
+        return number_format($w / pow($h / 100, 2), 2);
+    } else {
+        return 0;
+    }
 }
 function aw($h)
 {
-    return pow($h / 100, 2) * 22;
+    if ($h > 0) {
+        return pow($h / 100, 2) * 22;
+    } else {
+        return 0;
+    }
 }
 function diff($h, $w)
 {
@@ -136,7 +144,9 @@ function diff($h, $w)
 }
 function eval_bmi($bmi)
 {
-    if (0 <= $bmi && $bmi < 18.5) {
+    if ($bmi === 0) {
+        return "身長・体重が設定されていません";
+    } else if ($bmi < 18.5) {
         return "低体重(痩せ型)";
     } else if ($bmi < 25) {
         return "普通体重";
@@ -175,7 +185,7 @@ if ($diff_class === "text-danger") {
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="circle.css">
     <style>
-        .welcome{
+        .welcome {
             margin-top: 10px;
         }
     </style>
@@ -392,7 +402,7 @@ if ($diff_class === "text-danger") {
 
             if (targetScore > 0) {
                 const scoreBox = document.querySelector('.box.green .value');
-                scoreBox.textContent = <?php echo $score; ?> .toFixed(0);
+                scoreBox.textContent = <?php echo $score; ?>.toFixed(0);
 
 
                 const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
