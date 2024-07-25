@@ -24,7 +24,7 @@ fi
 
 SERVER_NAME=$(hostname)
 USER_NAME=$(whoami)
-PUBLICK_LINK="https://$SERVER_NAME/~$USER_NAME/$RELATIVE_PATH/pages/login_form.php"
+PUBLICK_LINK="https://$SERVER_NAME/~$USER_NAME$RELATIVE_PATH/pages/login_form.php"
 
 if [ $? -eq 0 ]; then
     echo "Successfully initialized."
