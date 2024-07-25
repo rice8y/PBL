@@ -19,10 +19,10 @@ try {
     $stmt->bindValue(':username', $username, SQLITE3_TEXT);
     $result = $stmt->execute();
     $row = $result->fetchArray(SQLITE3_ASSOC);
-    $user_id = $row ? $row['user_id'] : null;
+    $user_id = $row['user_id'] ? $row['user_id'] : null;
     $_SESSION['user_id'] = $user_id;
-    $height = $row ? $row['height'] : null;
-    $weight = $row ? $row['weight'] : null;
+    $height = $row['height'] ? $row['height'] : null;
+    $weight = $row['weight'] ? $row['weight'] : null;
     $nickname = $row['nickname'] ? $row['nickname'] : $username;
 
     $current_date = date('Y-m-d');
@@ -229,7 +229,7 @@ if ($diff_class === "text-danger") {
     </div>
     <div class="container text-center">
         <div class="row justify-content-md-center">
-            <div class="col-sm-7">
+            <div class="col-sm-12">
                 <br><br>
                 <form action="set_data.php" method="POST" id="set-data-form" novalidate>
                     <div class="form-outline mb-4 text-start">
@@ -402,8 +402,8 @@ if ($diff_class === "text-danger") {
 
             if (targetScore > 0) {
                 const scoreBox = document.querySelector('.box.green .value');
-                scoreBox.textContent = <?php echo $score; ?>.toFixed(0);
-
+                const score =  <?php echo $score; ?>;
+                scoreBox.textContent = score.toFixed(0);
 
                 const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
                 document.querySelector('.box.green').setAttribute('data-percent', scorePercent.toFixed(2));
