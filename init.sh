@@ -3,7 +3,6 @@
 sqlite3 < create.sql
 chmod +x pages/reset_state.php
 chmod a+rw sqlite3.db
-chmod a+rw pages
 chmod a+rw .
 
 TEMP_CRON=$(mktemp)
