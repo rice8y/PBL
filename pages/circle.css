@@ -68,6 +68,10 @@
     font-size: 14px;
 }
 
+.title {
+    line-height: 0.5;
+}
+
 .box .percent .line {
     animation: circleAnim 1s forwards;
 }

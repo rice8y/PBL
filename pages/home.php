@@ -416,7 +416,6 @@ if ($diff_class === "text-danger") {
                 } else {
                     scoreBox.textContent = score.toFixed(0) + " pts";
                 }
-                scoreBox.textContent = score.toFixed(0);
 
                 const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
                 document.querySelector('.box.green').setAttribute('data-percent', scorePercent.toFixed(2));
