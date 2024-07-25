@@ -8,6 +8,6 @@ chmod a+rw .
 TEMP_CRON=$(mktemp)
 crontab -l > "$TEMP_CRON"
 CURRENT_DIR=$(pwd)
-echo "0 0 * * * /usr/bin/php \"$CURRENT_DIR/pages/reset_state.php\"" >> "$TEMP_CRON"
+echo "0 0 * * * /usr/bin/php $CURRENT_DIR/pages/reset_state.php" >> "$TEMP_CRON"
 crontab "$TEMP_CRON"
 rm "$TEMP_CRON"
