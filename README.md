@@ -42,7 +42,7 @@ https://your_server/your_path/PBL/pages/login_form.php
 ## 環境
 
 **FE:** HTML, CSS, JavaScript  
-**FW:** Boostrap, Plotly
+**FW:** Boostrap, Plotly  
 **BE:** PHP  
 **DB:** SQLite3
 
