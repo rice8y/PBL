@@ -39,7 +39,7 @@ https://your_server/your_path/PBL/pages/login_form.php
 
 - 健康管理アプリ
 
-## 環境
+## 使用技術
 
 **FE:** HTML, CSS, JavaScript  
 **FW:** Boostrap, Plotly  
