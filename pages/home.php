@@ -258,7 +258,7 @@ if ($diff_class === "text-danger") {
                                     <circle class="line" cx="75" cy="75" r="70"></circle>
                                 </svg>
                                 <div class="number">
-                                    <h3 class="title"><span class="value">0 hour</span></h3>
+                                    <h3 class="title"><span class="value">0</span><span> 時間</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +270,7 @@ if ($diff_class === "text-danger") {
                                     <circle class="line" cx="75" cy="75" r="70"></circle>
                                 </svg>
                                 <div class="number">
-                                    <h3 class="title"><span class="value">0 step</span></h3>
+                                    <h3 class="title"><span class="value">0</span><span> 歩</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -282,7 +282,7 @@ if ($diff_class === "text-danger") {
                                     <circle class="line" cx="75" cy="75" r="70"></circle>
                                 </svg>
                                 <div class="number">
-                                    <h3 class="title"><span class="value">0 point</span></h3>
+                                    <h3 class="title"><span class="value">0</span><span> 点</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -383,11 +383,7 @@ if ($diff_class === "text-danger") {
                 const [hours, minutes] = sleepValue !== 0 ? sleepValue.split(':').map(Number) : [0, 0];
                 const total = hours + minutes / 60;
                 const sleepBox = document.querySelector('.box.blue .value');
-                if (sleepBox === 0) {
-                    sleepBox.textContent = total.toFixed(2) + " hour";
-                } else {
-                    sleepBox.textContent = total.toFixed(2) + " hours";
-                }
+                sleepBox.textContent = total.toFixed(2);
 
                 const sleepPercent = (total / parseFloat("<?php echo $target_sleep; ?>")) * 100;
                 document.querySelector('.box.blue').setAttribute('data-percent', sleepPercent.toFixed(2));
@@ -397,11 +393,7 @@ if ($diff_class === "text-danger") {
             if (yData.length > 0) {
                 const latestSteps = yData[6];
                 const stepsBox = document.querySelector('.box.red .value');
-                if (latestSteps === 0) {
-                    stepsBox.textContent = latestSteps + " step";
-                } else {
-                    stepsBox.textContent = latestSteps + " steps";
-                }
+                stepsBox.textContent = latestSteps;
 
                 const stepsPercent = (latestSteps / parseInt("<?php echo $target_steps; ?>")) * 100;
                 document.querySelector('.box.red').setAttribute('data-percent', stepsPercent.toFixed(2));
@@ -410,12 +402,8 @@ if ($diff_class === "text-danger") {
 
             if (targetScore > 0) {
                 const scoreBox = document.querySelector('.box.green .value');
-                const score = <?php echo $score; ?>;
-                if (score === 0) {
-                    scoreBox.textContent = score.toFixed(0) + " point";
-                } else {
-                    scoreBox.textContent = score.toFixed(0) + " points";
-                }
+                const score =  <?php echo $score; ?>;
+                scoreBox.textContent = score.toFixed(0);
 
                 const scorePercent = (<?php echo $score; ?> / targetScore) * 100;
                 document.querySelector('.box.green').setAttribute('data-percent', scorePercent.toFixed(2));
