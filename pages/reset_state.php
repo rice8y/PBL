@@ -1,6 +1,6 @@
 <?php
 try {
-    $db_file = "/home/j496yone/public_html/pblone/test/../sqlite3.db";
+    $db_file = "db_abs_path";
     $tbl = "check_lists";
     $sqlite = new SQLite3($db_file, SQLITE3_OPEN_READWRITE);
     $sqlite->enableExceptions(true);

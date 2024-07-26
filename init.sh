@@ -11,9 +11,16 @@ chmod +x pages/reset_state.php
 chmod a+rw sqlite3.db
 chmod a+rw .
 
+FILE="pages/reset_state.php"
+CURRENT_DIR=$(pwd)
+LINE=3
+TARGET="db_abs_path"
+REPLACE="$CURRENT_DIR/sqlite3.db"
+
+sed -i "${LINE}s/${TARGET}/${REPLACE}/" "$FILE"
+
 TEMP_CRON=$(mktemp)
 crontab -l > "$TEMP_CRON"
-CURRENT_DIR=$(pwd)
 echo "0 0 * * * /usr/bin/php $CURRENT_DIR/pages/reset_state.php" >> "$TEMP_CRON"
 crontab "$TEMP_CRON"
 rm "$TEMP_CRON"
