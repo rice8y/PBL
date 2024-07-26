@@ -17,7 +17,7 @@ LINE=3
 TARGET="db_abs_path"
 REPLACE="$CURRENT_DIR/sqlite3.db"
 
-sed -i "${LINE}s/${TARGET}/${REPLACE}/" "$FILE"
+sed -i "${LINE}s|${TARGET}|${REPLACE}|g" "$FILE"
 
 TEMP_CRON=$(mktemp)
 crontab -l > "$TEMP_CRON"
