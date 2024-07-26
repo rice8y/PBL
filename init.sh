@@ -2,7 +2,8 @@
 
 # =======================================================================================================================
 # This is a health initialization tool.
-# Process: Create the database and change the appropriate permissions.
+# Process: Create the database and change the appropriate permissions. 
+#          Also, change the path to the database file in reset_state.php.
 # Note: The link displayed upon successful initialization assumes that the server in use Ehime University's web server.
 # =======================================================================================================================
 
