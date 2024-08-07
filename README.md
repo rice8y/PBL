@@ -17,7 +17,7 @@
 
 &nbsp;  
 **フロントエンド：** HTML, CSS, JavaScript  
-**FEフレームワーク：** Boostrap, Plotly  
+**フロントエンドフレームワーク：** Boostrap, Plotly  
 **バックエンド** PHP  
 **データベース：** SQLite3  
 **その他：** POSIX Shell
