@@ -1,8 +1,25 @@
 # PBL
 
-[テストページ](https://sshg.cs.ehime-u.ac.jp/~j496yone/test/PBL/pages/login_form.php)
+## Collaborator
 
-## Usage
+- [rice8y](https://github.com/rice8y)
+- [j339nogu](https://github.com/j339nogu)
+
+## 製作物
+
+### 概要
+
+**アプリケーション名：** 健康管理アプリ
+**解決課題：** 視覚的な健康管理による生活習慣の改善
+
+### 使用技術
+
+**フロントエンド：** HTML, CSS, JavaScript  
+**FEフレームワーク：** Boostrap, Plotly  
+**バックエンド** PHP  
+**データベース：** SQLite3
+
+## 設置方法
 
 ### 1. git clone
 
@@ -24,6 +41,7 @@ chmod +x init.sh
 > `init.sh` で行っていることは以下の通り.
 > - データベースの作成
 > - パーミッションの変更
+> - `reset_state.php` 内のパス変更
 > - Cron ジョブの設定
 
 ### 4. ログイン画面にアクセス
@@ -35,26 +53,15 @@ https://your_server/your_path/PBL/pages/login_form.php
 >[!WARNING]
 >`your_server`, `your_path` は自身のサーバ, パスに置き換えること. また, ログイン画面から新規登録画面に遷移し, 新規登録すること.
 
-## 製作物
+## 参考文献
 
-- 健康管理アプリ
-
-## 使用技術
-
-**FE:** HTML, CSS, JavaScript  
-**FW:** Boostrap, Plotly  
-**BE:** PHP  
-**DB:** SQLite3
-
-## ファイル
-
-## SQLite 関係
+### SQLite 関係
 
 - [SQLite3 for PHP](https://rice8y.github.io/sqlite3/)
 - [SQLite 公式ドキュメント](https://www.sqlite.org/docs.html)
 - [PHP SQLite3 公式マニュアル](https://www.php.net/manual/ja/class.sqlite3.php)
 
-## Boostrap 関係
+### Boostrap 関係
 
 - [とほほのBootstrap 5入門](https://www.tohoho-web.com/bootstrap5/index.html)
 - [Boostrap 公式ドキュメント](https://getbootstrap.jp/docs/5.3/getting-started/introduction/)
